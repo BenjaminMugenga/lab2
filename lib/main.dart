@@ -32,6 +32,9 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _loginController;
   late TextEditingController _passwordController;
 
+  // NEW: which picture to show. Starts as the question mark.
+  var imageSource = "images/question-mark.png";
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +53,15 @@ class _MyHomePageState extends State<MyHomePage> {
   void _login() {
     String password = _passwordController.text;
     print("Password typed: $password");
+
+    // NEW: change the picture and redraw the screen
+    setState(() {
+      if (password == "ASDF") {
+        imageSource = "images/light-bulb.png";
+      } else {
+        imageSource = "images/stop-sign.png";
+      }
+    });
   }
 
   @override
@@ -62,33 +74,44 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Login name field
-              TextField(
-                controller: _loginController,
-                decoration: const InputDecoration(
-                  labelText: "Login name",
-                  border: OutlineInputBorder(),
+          // NEW: lets the page scroll if the image doesn't fit
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Login name field
+                TextField(
+                  controller: _loginController,
+                  decoration: const InputDecoration(
+                    labelText: "Login name",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              // Password field (hidden text)
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 16),
+                // Password field (hidden text)
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: "Password",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _login,
-                child: const Text("Login"),
-              ),
-            ],
+                const SizedBox(height: 16),
+                // Login button
+                ElevatedButton(
+                  onPressed: _login,
+                  child: const Text("Login"),
+                ),
+                const SizedBox(height: 16),
+                // NEW: the 300 x 300 image
+                Image.asset(
+                  imageSource,
+                  width: 300,
+                  height: 300,
+                ),
+              ],
+            ),
           ),
         ),
       ),
