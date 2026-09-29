@@ -32,8 +32,45 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _loginController;
   late TextEditingController _passwordController;
 
-  // NEW: which picture to show. Starts as the question mark.
+  // Which picture to show. Starts as the question mark.
   var imageSource = "images/question-mark.png";
+
+  // NEW: the current language ("en" = English, "fr" = French)
+  String _language = "en";
+
+  // NEW: every piece of text on the screen, in both languages
+  final Map<String, Map<String, String>> _text = {
+    "en": {
+      "title": "Login Page",
+      "loginName": "Login name",
+      "password": "Password",
+      "loginButton": "Login",
+      "switchButton": "Français",
+    },
+    "fr": {
+      "title": "Page de connexion",
+      "loginName": "Nom d'utilisateur",
+      "password": "Mot de passe",
+      "loginButton": "Connexion",
+      "switchButton": "English",
+    },
+  };
+
+  // NEW: looks up a word in the current language
+  String t(String key) {
+    return _text[_language]![key]!;
+  }
+
+  // NEW: flips between English and French
+  void _switchLanguage() {
+    setState(() {
+      if (_language == "en") {
+        _language = "fr";
+      } else {
+        _language = "en";
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -54,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String password = _passwordController.text;
     print("Password typed: $password");
 
-    // NEW: change the picture and redraw the screen
+    // Change the picture and redraw the screen
     setState(() {
       if (password == "ASDF") {
         imageSource = "images/light-bulb.png";
@@ -69,12 +106,19 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(t("title")),
+        // NEW: language switch button in the top-right corner
+        actions: [
+          TextButton(
+            onPressed: _switchLanguage,
+            child: Text(t("switchButton")),
+          ),
+        ],
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          // NEW: lets the page scroll if the image doesn't fit
+          // Lets the page scroll if the image doesn't fit
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -82,9 +126,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 // Login name field
                 TextField(
                   controller: _loginController,
-                  decoration: const InputDecoration(
-                    labelText: "Login name",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: t("loginName"),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -92,19 +136,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: "Password",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: t("password"),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 16),
                 // Login button
                 ElevatedButton(
                   onPressed: _login,
-                  child: const Text("Login"),
+                  child: Text(t("loginButton")),
                 ),
                 const SizedBox(height: 16),
-                // NEW: the 300 x 300 image
+                // The 300 x 300 image
                 Image.asset(
                   imageSource,
                   width: 300,
