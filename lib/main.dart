@@ -46,6 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  // Runs when the Login button is pressed
+  void _login() {
+    String password = _passwordController.text;
+    print("Password typed: $password");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +82,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   labelText: "Password",
                   border: OutlineInputBorder(),
                 ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _login,
+                child: const Text("Login"),
               ),
             ],
           ),
